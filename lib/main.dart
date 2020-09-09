@@ -15,12 +15,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bagel Pizza',
       theme: ThemeData.dark(),
-      home: HomeView(),
-      // home: SplashScreen(
-      //   'assets/MyPizzaSlice.flr',
-      //   HomeView(),
-      //   startAnimation: 'Pizza Bounce',
-      // ),
+      //home: HomeView(),
+      home: SplashScreen(
+        'assets/pizza.flr',
+        HomeView(),
+        startAnimation: 'pizza',
+      ),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -1,5 +1,5 @@
 name: bagel_pizza
-description: A new Flutter project.
+description: An example app for bagel_db package
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -39,6 +39,13 @@ dev_dependencies:
   flare_splash_screen: ^2.0.1+2
   bagel_db: ^0.1.2
   chips_choice: ^1.2.0
+  flutter_launcher_icons: ^0.7.5
+
+flutter_icons:
+  image_path: "assets/pizza_icon-oval.png" 
+  android: true
+  ios: true
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -53,8 +60,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/MyPizzaSlice.flr
+    - assets/pizza.flr
     - assets/logo.png
+    - assets/pizza_icon.jpg
+    - assets/pizza_icon-oval.png
     - assets/
   #   - images/a_dot_ham.jpeg
 

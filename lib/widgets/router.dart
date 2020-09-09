@@ -8,6 +8,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case 'orderedPage':
       return MaterialPageRoute(builder: (context) => OrderedPage());
+    case 'home':
+      return MaterialPageRoute(builder: (context) => HomeView());
     default:
       return MaterialPageRoute(builder: (context) => HomeView());
   }

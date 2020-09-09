@@ -11,6 +11,6 @@ class Topping {
   }
   @override
   String toString() {
-    return 'topping name: ${this.name}\nsmall image link: ${this.smallImage}\npizza image link: ${this.pizzaImage}';
+    return '${this.name}';
   }
 }
