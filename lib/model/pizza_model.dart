@@ -1,7 +1,7 @@
 import 'package:bagel_pizza/model/topping_model.dart';
 
 class Pizza {
-  final PIZZA_SIZE size;
+  PIZZA_SIZE size;
   List<Topping> toppings;
   Pizza({this.size, this.toppings});
 

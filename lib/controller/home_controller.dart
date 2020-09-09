@@ -1,31 +1,61 @@
+import 'dart:convert';
+
 import 'package:bagel_pizza/model/pizza_model.dart';
 import 'package:bagel_pizza/model/topping_model.dart';
 import 'package:bagel_pizza/scoped_model/base_model.dart';
-
 import 'package:bagel_db/bagel_db.dart';
-
+import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../model/topping_model.dart';
 
 class HomeController extends BaseModel {
   static String _apiToken =
       'eyJhbGciOiJSUzI1NiIsImtpZCI6ImFwaS1rZXkiLCJ0eXAiOiJKV1QifQ.eyJvcmdhbml6YXRpb25JRCI6ImJyaDJ0YmkyM2FrZzAwZWkwdDBnIiwicHJvamVjdElEIjoiYnNvaDF2MjIzYWtnMDA4cmhocWciLCJhdWQiOiJodHRwczovL2RldmlsIiwianRpIjoiNjk4MmNkZjItMmFlYi00ZmNhLTk2OGItZjNmNjUxYWE2MmM1IiwiaXNzIjoiaHR0cHM6Ly9hdXRoZW50aWNhdGlvbi5iYWdlbGRiLmNvIiwic3ViIjoiYnNvaDF2MjIzYWtnMDA4cmhocWcifQ.LV9XZdy0WWU4L8hK2M1TKzACMcUoMKI8BE13rDa8xchuTjMJhuQe2HlrH10fb63EhFW5ZypIOXJsjzbrB3GYk2lpL8UldqgNW9k12dV2UWfRXLVBWBkMMbh-zOAZmc6FRyOmOrNVZcfRudXfmUspa8ZJoynX7yowMzRgtqZOnMQpl_ouFSQSb_R235Qe3cbDaM4EYKnPXM_TKVopZVcVmWt66OtBsh1ucyB3DeWec8VAM50ahN9fFn6BhWlhu9gVsAx9KVdgpyVRtM-Qbl54QIFFNExmiulvn6BUBGNl_wevMK63qby3n9E7xXl9YjAkUvIlLAkz6TjZUJF6jsvKAmhN4TEqLALMtv_ssSxUDKwSkBnuTMysY5VhNYzjv6EoG35kAcgFjNRv8TqemRcGuQosJLvFZAb2dDZJXf1N8ROOdjwUF-v_z5wsCB4nQXYedzpkaEYG4sSwl-HN9ApLWs_lKNz0DzoEJe65JYOr_uqU2JPeTbm3zK705JZyxyfoyykSIuYEQvrOa2tYN0xLrsB9xmR_rB8Am12KeV3nlEQZStZcj4t82RxO7nkI9bJ3K4LwWmBg5ZwmeneQHzTibotKm26ASom9pTR8t1BVzKwoGrLtbTCRJSKjylPUcsxUgUxjG_JLVq0vzANehmWDnnRhwzCoQvTYe79-Ex_6tqA';
-  // static String emptyPizzaImageLink = 'https://sfo2.digitaloceanspaces.com/bagel/bagel/pizza.png';
+  //! declare
   BagelDB _bagelDB = BagelDB(token: _apiToken);
   List<Topping> toppingsList = [];
-  List<Topping> userToppigsList = [];
   List<String> pizzaToppingsImages = [];
   bool finishDrag = true;
-  List<String> sizeLst = ['Small', 'Medium', 'Large'];
+  List<String> sizeLst = ['Small | \$13', 'Medium | \$18', 'Large | \$24'];
   int tag = 1;
   Pizza currentPizza;
   List<Pizza> pizzasList = [];
+  bool edit = false;
+  final GlobalKey<FormBuilderState> fbKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<FormFieldState> specifyTextFieldKey =
+      GlobalKey<FormFieldState>();
+  bool formSent = false;
+  bool loadingFormSubmit = false;
+  bool submitError = false;
 
-  void init() {
-    loadToppings();
+  void init({Map pizzaMap}) {
+    Pizza pizza;
+    if (pizzaMap != null) {
+      if (pizzaMap["pizza"] != null) {
+        pizza = pizzaMap["pizza"];
+        edit = true;
+      } else
+        edit = false;
+    } else
+      edit = false;
+    print('pizza is: $pizza');
+    if (toppingsList.isEmpty) loadToppings();
+    if (pizza == null) {
+      print('build curPizza');
+      currentPizza = Pizza(toppings: List(), size: returnPizzaSizeEnum(1));
+      pizzaToppingsImages.clear();
+      formSent = false;
+    } else {
+      currentPizza = pizza;
+      pizzaToppingsImages =
+          pizza.toppings.map((Topping topping) => topping.pizzaImage).toList();
+    }
+    notifyListeners();
   }
 
   changeTag(int tagNum) {
     this.tag = tagNum;
+    currentPizza.size = returnPizzaSizeEnum(tagNum);
     print(this.tag);
     notifyListeners();
   }
@@ -52,6 +82,17 @@ class HomeController extends BaseModel {
         return 'Large';
     }
   }
+
+  Map<String, String> convertSizeEnumToId(PIZZA_SIZE pizzaSize) {
+    switch (pizzaSize) {
+      case (PIZZA_SIZE.Small):
+        return {"_id": "bsp7k6i23akg00f8gi60"};
+      case (PIZZA_SIZE.Medium):
+        return {"_id": "bsp7k6i23akg00f8gi6g"};
+      default:
+        return {"_id": "bsp7k6i23akg00f8gi70"};
+    }
+  }
   // selectSize(int index) {
   //   sizeLst[index] = !sizeLst[index];
   //   print(sizeLst.toString());
@@ -59,6 +100,7 @@ class HomeController extends BaseModel {
   // }
 
   loadToppings() async {
+    //! bagelDB get
     BagelResponse res =
         await _bagelDB.collection('toppings').everything().get();
     var data = res.data;
@@ -72,34 +114,101 @@ class HomeController extends BaseModel {
 
   addToppingToPizza(Topping topping) {
     this.pizzaToppingsImages.add(topping.pizzaImage);
-    this.userToppigsList.add(topping);
+    currentPizza.toppings.add(topping);
     notifyListeners();
   }
 
   resetToppings() {
     this.pizzaToppingsImages.clear();
-    userToppigsList.clear();
+    currentPizza.toppings.clear();
     notifyListeners();
   }
 
   removeTopping(Topping topping) {
     this.pizzaToppingsImages.remove(topping.pizzaImage);
-    this.userToppigsList.remove(topping);
+    currentPizza.toppings.remove(topping);
     notifyListeners();
   }
 
-  void postPizza() {
-    List<Topping> userTops = this.userToppigsList;
-    Pizza pizza =
-        new Pizza(size: returnPizzaSizeEnum(this.tag), toppings: userTops);
-    this.currentPizza = pizza;
-    this.pizzasList.add(pizza);
+  void savePizza() {
+    if (!edit) this.pizzasList.add(currentPizza);
     notifyListeners();
-    print(pizza.toString());
+    print(currentPizza.toString());
   }
 
   removePizza(Pizza pizzaToRemove) {
     this.pizzasList.remove(pizzaToRemove);
     notifyListeners();
+  }
+
+  submitForm(Map<String, dynamic> form) async {
+    loadingFormSubmit = true;
+    notifyListeners();
+    List<String> pizzaIDs = [];
+    for (Pizza pizza in pizzasList) {
+      try {
+        Map<String, dynamic> map = {
+          'size': convertSizeEnumToId(pizza.size),
+          'toppings': pizza.toppings
+              .map((Topping topping) => {'itemRefID': topping.id})
+              .toList()
+        };
+        //! bagelDB post
+        BagelResponse response =
+            await this._bagelDB.collection('pizzas').post(item: map);
+        pizzaIDs.add(response.data['id']);
+      } catch (e) {
+        print(e.response.data);
+      }
+    }
+    Map<String, dynamic> cartMap = {
+      'name': form["name"],
+      'email': form["email"],
+      'phone': form["phone"],
+      'adress': form["adress"],
+      'totalPrice': calculateTotalPrice(),
+      'pizza': pizzaIDs.map((pizzaID) => {'itemRefID': pizzaID}).toList()
+    };
+    //! bagelDB post
+    BagelResponse res =
+        await this._bagelDB.collection('carts').post(item: cartMap);
+    if (res.statusCode == 201) {
+      loadingFormSubmit = false;
+      formSent = true;
+    } else {
+      formSent = true;
+      submitError = true;
+    }
+    notifyListeners();
+  }
+
+  double priceBySize(PIZZA_SIZE pizzaSize) {
+    switch (pizzaSize) {
+      case (PIZZA_SIZE.Small):
+        return 13.0;
+      case (PIZZA_SIZE.Medium):
+        return 18.0;
+      default:
+        return 24.0;
+    }
+  }
+
+  calculatePizzaPrice(Pizza pizza) {
+    double totalPrice = 0;
+    double sizePrice = priceBySize(pizza.size);
+    double toppingsTotalPrice = 0;
+    for (Topping topping in pizza.toppings) {
+      toppingsTotalPrice = toppingsTotalPrice + topping.price;
+    }
+    totalPrice = toppingsTotalPrice + sizePrice;
+    return totalPrice;
+  }
+
+  calculateTotalPrice() {
+    double totalPrice = 0;
+    for (Pizza pizza in pizzasList) {
+      totalPrice = totalPrice + calculatePizzaPrice(pizza);
+    }
+    return totalPrice;
   }
 }

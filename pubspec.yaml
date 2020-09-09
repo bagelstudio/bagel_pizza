@@ -40,6 +40,9 @@ dev_dependencies:
   bagel_db: ^0.1.2
   chips_choice: ^1.2.0
   flutter_launcher_icons: ^0.7.5
+  flutter_form_builder: ^3.9.0
+  flare_flutter: ^2.0.6
+
 
 flutter_icons:
   image_path: "assets/pizza_icon-oval.png" 

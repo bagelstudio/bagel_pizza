@@ -9,7 +9,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case 'orderedPage':
       return MaterialPageRoute(builder: (context) => OrderedPage());
     case 'home':
-      return MaterialPageRoute(builder: (context) => HomeView());
+      Map args = settings.arguments;
+      if (args == null)
+        return MaterialPageRoute(builder: (context) => HomeView());
+      return MaterialPageRoute(builder: (context) => HomeView(args: args));
     default:
       return MaterialPageRoute(builder: (context) => HomeView());
   }
