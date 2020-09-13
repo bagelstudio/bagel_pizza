@@ -60,6 +60,6 @@ Schema:
 For more info about **BagelDB** visit us at bageldb.com or signup at app.bageldb.com/signup.
 For questions or comments, join us on [Discord](https://discord.gg/49hq7wu).
 
-![Screenshot_1](assets/printscreens/Simulator Screen Shot - iPhone 11 - 2020-09-13 at 14.47.37.png)   
-![Screenshot_2](assets/printscreens/Simulator Screen Shot - iPhone 11 - 2020-09-13 at 14.48.31.png)   
-![Screenshot_3](assets/printscreens/Simulator Screen Shot - iPhone 11 - 2020-09-13 at 14.48.42.png)    
+![Screenshot_1](assets/printscreens/first_screen.png)   
+![Screenshot_2](assets/printscreens/second_screen.png)   
+![Screenshot_3](assets/printscreens/third_screen.png)    
