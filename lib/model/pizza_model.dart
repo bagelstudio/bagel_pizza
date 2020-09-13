@@ -1,31 +1,21 @@
+import 'package:bagel_pizza/model/size_model.dart';
 import 'package:bagel_pizza/model/topping_model.dart';
 
 class Pizza {
-  PIZZA_SIZE size;
+  String size;
+  double price;
   List<Topping> toppings;
-  Pizza({this.size, this.toppings});
+  Pizza({this.size, this.toppings, this.price});
 
   factory Pizza.fromMap(obj) {
     return Pizza(
-      size: returnPizzaSizeEnum(obj["size"]["value"] ?? ''),
-      toppings: buildToppingsList(obj["toppings"] ?? []),
-    );
+        size: obj["size"]["name"] ?? '',
+        toppings: buildToppingsList(obj["toppings"] ?? []),
+        price: obj["price"]);
   }
   @override
   String toString() {
     return 'size: ${this.size}\ntoppings list: ${this.toppings.toString()}';
-  }
-
-  static PIZZA_SIZE returnPizzaSizeEnum(String sizeString) {
-    print(sizeString);
-    switch (sizeString) {
-      case ('small'):
-        return PIZZA_SIZE.Small;
-      case ('medium'):
-        return PIZZA_SIZE.Medium;
-      default:
-        return PIZZA_SIZE.Large;
-    }
   }
 
   static List<Topping> buildToppingsList(List obj) {
@@ -36,5 +26,3 @@ class Pizza {
     return _toppings;
   }
 }
-
-enum PIZZA_SIZE { Small, Medium, Large }

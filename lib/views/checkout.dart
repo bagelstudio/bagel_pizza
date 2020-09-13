@@ -32,7 +32,10 @@ class CheckOut extends StatelessWidget {
                             Text('Price:',
                                 style: GoogleFonts.raleway(fontSize: 18)),
                             Text(
-                              '\$' + model.calculateTotalPrice().toString(),
+                              '\$' +
+                                  model
+                                      .calculateTotalPrice()
+                                      .toStringAsFixed(1),
                               style: GoogleFonts.raleway(
                                   fontSize: 50, fontWeight: FontWeight.bold),
                             ),
@@ -40,116 +43,7 @@ class CheckOut extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 25),
-                      FormBuilder(
-                          key: model.fbKey,
-                          initialValue: {},
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Column(
-                              children: [
-                                FormBuilderTextField(
-                                  cursorColor: Colors.white,
-                                  textDirection: TextDirection.rtl,
-                                  initialValue: '',
-                                  attribute: "name",
-                                  decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.red)),
-                                    filled: false,
-                                    contentPadding: EdgeInsets.only(
-                                        bottom: 10.0, left: 10.0, right: 10.0),
-                                    labelStyle: GoogleFonts.raleway(
-                                        color: Colors.white),
-                                    labelText: "Name",
-                                  ),
-                                  onChanged: (val) => print(val),
-                                  validators: [
-                                    FormBuilderValidators.required(),
-                                    FormBuilderValidators.maxLength(30)
-                                  ],
-                                  keyboardType: TextInputType.text,
-                                ),
-                                SizedBox(height: 20),
-                                FormBuilderTextField(
-                                  initialValue: '',
-                                  attribute: "email",
-                                  decoration: InputDecoration(
-                                    labelStyle: GoogleFonts.raleway(
-                                        color: Colors.white),
-                                    labelText: "Email",
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.red)),
-                                    filled: false,
-                                    contentPadding: EdgeInsets.only(
-                                        bottom: 10.0, left: 10.0, right: 10.0),
-                                  ),
-                                  onChanged: (val) => print(val),
-                                  validators: [
-                                    FormBuilderValidators.required(),
-                                    FormBuilderValidators.email()
-                                  ],
-                                  keyboardType: TextInputType.text,
-                                ),
-                                SizedBox(height: 20),
-                                FormBuilderTextField(
-                                  initialValue: '',
-                                  attribute: "phone",
-                                  decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.red)),
-                                    filled: false,
-                                    contentPadding: EdgeInsets.only(
-                                        bottom: 10.0, left: 10.0, right: 10.0),
-                                    labelStyle: GoogleFonts.raleway(
-                                        color: Colors.white),
-                                    labelText: "Phone",
-                                  ),
-                                  onChanged: (val) => print(val),
-                                  validators: [
-                                    FormBuilderValidators.required(),
-                                    // FormBuilderValidators.pattern(
-                                    //     r'^[0][5][0|2|3|4|5|9]{1}[-]{0,1}[0-9]{7}$')
-                                  ],
-                                  keyboardType: TextInputType.text,
-                                ),
-                                SizedBox(height: 20),
-                                FormBuilderTextField(
-                                  textDirection: TextDirection.rtl,
-                                  initialValue: '',
-                                  attribute: "adress",
-                                  decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.red)),
-                                    filled: false,
-                                    contentPadding: EdgeInsets.only(
-                                        bottom: 10.0, left: 10.0, right: 10.0),
-                                    labelStyle: GoogleFonts.raleway(
-                                        color: Colors.white),
-                                    labelText: "Adress",
-                                  ),
-                                  onChanged: (val) => print(val),
-                                  validators: [
-                                    FormBuilderValidators.required(),
-                                    FormBuilderValidators.maxLength(30)
-                                  ],
-                                  keyboardType: TextInputType.text,
-                                ),
-                              ],
-                            ),
-                          )),
+                      pizzaFormUI(model, context),
                       SizedBox(height: 30),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 50),
@@ -165,9 +59,6 @@ class CheckOut extends StatelessWidget {
                             }
                           },
                           splashColor: Colors.red[200],
-
-                          // minWidth: MediaQuery.of(context).size.width * 0.55,
-                          // height: 45,
                           child: model.loadingFormSubmit
                               ? SizedBox(
                                   height: 10,
@@ -230,21 +121,18 @@ class CheckOut extends StatelessWidget {
                               color: Colors.red,
                               onPressed: () {
                                 model.pizzasList.clear();
+                                model.loadingFormSubmit = false;
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => HomeView()));
                               },
                               splashColor: Colors.red[200],
-
-                              // minWidth: MediaQuery.of(context).size.width * 0.55,
-                              // height: 45,
                               child: Text('New order',
                                   style:
                                       GoogleFonts.raleway(color: Colors.white)),
                               textColor: Colors.white,
                               shape: RoundedRectangleBorder(
-                                  //side: BorderSide(color: Colors.blue, width: 1, style: BorderStyle.solid),
                                   borderRadius: BorderRadius.circular(50)),
                             ),
                           ],
@@ -253,6 +141,80 @@ class CheckOut extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget pizzaFormUI(HomeController model, BuildContext context) {
+    return FormBuilder(
+        key: model.fbKey,
+        initialValue: {},
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            children: [
+              formFieldUI(
+                attribute: "name",
+                labelText: "Name",
+                validators: [
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.maxLength(30)
+                ],
+              ),
+              formFieldUI(
+                attribute: "email",
+                labelText: "Email",
+                validators: [
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.email()
+                ],
+              ),
+              formFieldUI(
+                attribute: "phone",
+                labelText: "Phone",
+                validators: [
+                  FormBuilderValidators.required(),
+                ],
+              ),
+              formFieldUI(
+                attribute: "adress",
+                labelText: "Adress",
+                validators: [
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.maxLength(30)
+                ],
+              ),
+            ],
+          ),
+        ));
+  }
+
+  Widget formFieldUI(
+      {String attribute,
+      String labelText,
+      List<String Function(dynamic)> validators}) {
+    return Column(
+      children: [
+        FormBuilderTextField(
+          cursorColor: Colors.white,
+          textDirection: TextDirection.ltr,
+          initialValue: '',
+          attribute: attribute,
+          decoration: InputDecoration(
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                borderSide: BorderSide(color: Colors.red)),
+            filled: false,
+            contentPadding:
+                EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
+            labelStyle: GoogleFonts.raleway(color: Colors.white),
+            labelText: labelText,
+          ),
+          onChanged: (val) => print(val),
+          validators: validators,
+          keyboardType: TextInputType.text,
+        ),
+        SizedBox(height: 20),
+      ],
     );
   }
 }

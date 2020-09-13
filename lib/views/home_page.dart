@@ -31,24 +31,18 @@ class HomeView extends StatelessWidget {
                 child: Container(
                     color: Colors.white.withOpacity(0.5), height: 0.3),
               ),
-              ChipsChoice<int>.single(
-                value: model.tag,
-                options: ChipsChoiceOption.listFrom<int, String>(
-                  source: model.sizeLst,
-                  value: (i, v) => i,
-                  label: (i, v) => v,
-                ),
-                itemConfig: ChipsChoiceItemConfig(
-                  elevation: 1,
-                  spacing: 30.0,
-                  selectedColor: Colors.red,
-                  showCheckmark: true,
-                  labelStyle: GoogleFonts.raleway(fontSize: 14),
-                  selectedBrightness: Brightness.dark,
-                ),
-                onChanged: (val) => model.changeTag(val),
-                isWrapped: false,
-              ),
+              model.sizesList.isEmpty
+                  ? Container(
+                      height: 14,
+                      width: 14,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Colors.red),
+                          strokeWidth: 3,
+                        ),
+                      ),
+                    )
+                  : _chipsUI(model),
               Padding(
                 padding: const EdgeInsets.only(right: 10, left: 10, bottom: 4),
                 child: Container(
@@ -125,46 +119,11 @@ class HomeView extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         itemCount: model.toppingsList.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Draggable<Topping>(
-                              data: model.toppingsList[index],
-                              child: model.pizzaToppingsImages.contains(model
-                                          .toppingsList[index].pizzaImage) &&
-                                      model.finishDrag
-                                  ? _cancelToppingItemUI(
-                                      model.toppingsList[index], model)
-                                  : _toppingItemUI(model.toppingsList[index]),
-                              feedback: _toppingItemUIDragged(
-                                  model.toppingsList[index]),
-                              affinity: Axis.vertical,
-                              onDragStarted: () => model.finishDrag = false,
-                              onDragCompleted: () => model.finishDrag = true,
-                              onDraggableCanceled: (v, o) =>
-                                  model.finishDrag = true,
-                              onDragEnd: (val) => model.finishDrag = true,
-                              childWhenDragging: _selectedToppingItemUI(
-                                  model.toppingsList[index]));
+                          return _draggableUI(model, index);
                         }),
               ),
-              SizedBox(height: 25),
-              FlatButton(
-                disabledColor: Colors.red,
-                color: Colors.red,
-                onPressed: () {
-                  model.savePizza();
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => OrderedPage()));
-                },
-                splashColor: Colors.red[200],
-
-                // minWidth: MediaQuery.of(context).size.width * 0.55,
-                // height: 45,
-                child: Text('Next',
-                    style: GoogleFonts.raleway(color: Colors.white)),
-                textColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                    //side: BorderSide(color: Colors.blue, width: 1, style: BorderStyle.solid),
-                    borderRadius: BorderRadius.circular(50)),
-              ),
+              SizedBox(height: 5),
+              nextButtonUI(model, context),
               SizedBox(height: 13)
             ],
           ),
@@ -250,17 +209,58 @@ class HomeView extends StatelessWidget {
       ],
     );
   }
+
+  Widget _chipsUI(HomeController model) {
+    return ChipsChoice<int>.single(
+      value: model.tag,
+      options: ChipsChoiceOption.listFrom<int, String>(
+        source: model.sizesStringsToDisplay,
+        value: (i, v) => i,
+        label: (i, v) => v,
+      ),
+      itemConfig: ChipsChoiceItemConfig(
+        elevation: 1,
+        spacing: 30.0,
+        selectedColor: Colors.red,
+        showCheckmark: true,
+        labelStyle: GoogleFonts.raleway(fontSize: 14),
+        selectedBrightness: Brightness.dark,
+      ),
+      onChanged: (val) => model.changeTag(val),
+      isWrapped: false,
+    );
+  }
+
+  Widget _draggableUI(HomeController model, int index) {
+    return Draggable<Topping>(
+        data: model.toppingsList[index],
+        child: model.pizzaToppingsImages
+                    .contains(model.toppingsList[index].pizzaImage) &&
+                model.finishDrag
+            ? _cancelToppingItemUI(model.toppingsList[index], model)
+            : _toppingItemUI(model.toppingsList[index]),
+        feedback: _toppingItemUIDragged(model.toppingsList[index]),
+        affinity: Axis.vertical,
+        onDragStarted: () => model.finishDrag = false,
+        onDragCompleted: () => model.finishDrag = true,
+        onDraggableCanceled: (v, o) => model.finishDrag = true,
+        onDragEnd: (val) => model.finishDrag = true,
+        childWhenDragging: _selectedToppingItemUI(model.toppingsList[index]));
+  }
+
+  nextButtonUI(HomeController model, BuildContext context) {
+    return FlatButton(
+      disabledColor: Colors.red,
+      color: Colors.red,
+      onPressed: () {
+        model.savePizza();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => OrderedPage()));
+      },
+      splashColor: Colors.red[200],
+      child: Text('Next', style: GoogleFonts.raleway(color: Colors.white)),
+      textColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+    );
+  }
 }
-
-// class CustomRect extends CustomClipper<Rect> {
-//   @override
-//   Rect getClip(Size size) {
-//     Rect rect = Rect.fromLTRB(0.0, 0.0, size.width - 50, size.height);
-//     return rect;
-//   }
-
-//   @override
-//   bool shouldReclip(CustomRect oldClipper) {
-//     return true;
-//   }
-// }

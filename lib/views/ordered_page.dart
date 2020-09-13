@@ -8,14 +8,14 @@ class OrderedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<HomeController>(
-      onModelReady: (model) => print(model.toppingsList.length),
       builder: (context, childe, model) => Container(
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage('assets/bg.jpg'), fit: BoxFit.cover)),
         child: WillPopScope(
           onWillPop: () {
-            print('return to main');
+            return Navigator.pushNamed(context, 'home',
+                arguments: {'pizza': model.pizzasList.last});
           },
           child: Scaffold(
             backgroundColor: Colors.transparent,
@@ -47,45 +47,9 @@ class OrderedPage extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    model.tag = 1;
-                    Navigator.pushNamed(context, 'home');
-                  },
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage('assets/pizza.png'),
-                    backgroundColor: Colors.red,
-                    radius: 60.5,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.black.withOpacity(0.7),
-                      radius: 60,
-                      child: Icon(
-                        Icons.add,
-                        size: 55,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 25),
-                FlatButton(
-                  disabledColor: Colors.red,
-                  color: Colors.red,
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => CheckOut()));
-                  },
-                  splashColor: Colors.red[200],
-
-                  // minWidth: MediaQuery.of(context).size.width * 0.55,
-                  // height: 45,
-                  child: Text('All done?',
-                      style: GoogleFonts.raleway(color: Colors.white)),
-                  textColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      //side: BorderSide(color: Colors.blue, width: 1, style: BorderStyle.solid),
-                      borderRadius: BorderRadius.circular(50)),
-                ),
+                addPizzaButtonUI(model, context),
+                SizedBox(height: 5),
+                allDoneButtonUI(model, context),
                 SizedBox(height: 13)
               ],
             ),
@@ -125,8 +89,7 @@ class OrderedPage extends StatelessWidget {
                         color: Colors.red,
                       ),
                       icon: Text(
-                        model.convertSizeEnumToString(
-                                model.pizzasList[index].size) +
+                        model.pizzasList[index].size +
                             ' size | \$' +
                             model
                                 .calculatePizzaPrice(model.pizzasList[index])
@@ -165,6 +128,49 @@ class OrderedPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  addPizzaButtonUI(HomeController model, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        model.tag = 1;
+        Navigator.pushNamed(context, 'home');
+      },
+      child: CircleAvatar(
+        backgroundImage: AssetImage('assets/pizza.png'),
+        backgroundColor: Colors.red,
+        radius: 60.5,
+        child: CircleAvatar(
+          backgroundColor: Colors.black.withOpacity(0.7),
+          radius: 60,
+          child: Icon(
+            Icons.add,
+            size: 55,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
+  allDoneButtonUI(HomeController model, BuildContext context) {
+    return FlatButton(
+      disabledColor: Colors.red,
+      color: Colors.red,
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => CheckOut()));
+      },
+      splashColor: Colors.red[200],
+
+      // minWidth: MediaQuery.of(context).size.width * 0.55,
+      // height: 45,
+      child: Text('All done?', style: GoogleFonts.raleway(color: Colors.white)),
+      textColor: Colors.white,
+      shape: RoundedRectangleBorder(
+          //side: BorderSide(color: Colors.blue, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(50)),
     );
   }
 }
