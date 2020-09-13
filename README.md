@@ -60,6 +60,4 @@ Schema:
 For more info about **BagelDB** visit us at bageldb.com or signup at app.bageldb.com/signup.
 For questions or comments, join us on [Discord](https://discord.gg/49hq7wu).
 
-![Screenshot_1](assets/printscreens/first_screen.png)   
-![Screenshot_2](assets/printscreens/second_screen.png)   
-![Screenshot_3](assets/printscreens/third_screen.png)    
+![Screenshot_1](assets/printscreens/print_screen.png) 
