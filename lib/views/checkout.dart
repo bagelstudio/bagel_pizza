@@ -2,7 +2,6 @@ import 'package:bagel_pizza/controller/home_controller.dart';
 import 'package:bagel_pizza/scoped_model/base_view.dart';
 import 'package:bagel_pizza/views/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flare_flutter/flare_actor.dart';
 
@@ -11,13 +10,12 @@ class CheckOut extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseView<HomeController>(
       builder: (context, childe, model) => Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/bg.jpg'), fit: BoxFit.cover)),
+        decoration:
+            BoxDecoration(image: DecorationImage(image: AssetImage('assets/pictures/bg.jpg'), fit: BoxFit.cover)),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: Container(height: 28, child: Image.asset('assets/logo.png')),
+            title: Container(height: 28, child: Image.asset('assets/pictures/logo.png')),
             centerTitle: true,
           ),
           body: Center(
@@ -29,15 +27,10 @@ class CheckOut extends StatelessWidget {
                       Center(
                         child: Column(
                           children: [
-                            Text('Price:',
-                                style: GoogleFonts.raleway(fontSize: 18)),
+                            Text('Price:', style: TextStyle(fontSize: 18, fontFamily: 'Raleway')),
                             Text(
-                              '\$' +
-                                  model
-                                      .calculateTotalPrice()
-                                      .toStringAsFixed(1),
-                              style: GoogleFonts.raleway(
-                                  fontSize: 50, fontWeight: FontWeight.bold),
+                              '\$' + model.calculateTotalPrice().toStringAsFixed(1),
+                              style: TextStyle(fontFamily: 'Raleway', fontSize: 50, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -65,15 +58,12 @@ class CheckOut extends StatelessWidget {
                                   width: 10,
                                   child: Center(
                                     child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.white),
+                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                       strokeWidth: 2.5,
                                     ),
                                   ),
                                 )
-                              : Text('Submit',
-                                  style:
-                                      GoogleFonts.raleway(color: Colors.white)),
+                              : Text('Submit', style: TextStyle(fontFamily: 'Raleway', color: Colors.white)),
                           textColor: Colors.white,
                           shape: RoundedRectangleBorder(
                               //side: BorderSide(color: Colors.blue, width: 1, style: BorderStyle.solid),
@@ -94,7 +84,7 @@ class CheckOut extends StatelessWidget {
                             Center(
                               child: Text(
                                 'Thank you for order!',
-                                style: GoogleFonts.raleway(fontSize: 28),
+                                style: TextStyle(fontFamily: 'Raleway', fontSize: 28),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -102,7 +92,7 @@ class CheckOut extends StatelessWidget {
                             Center(
                               child: Text(
                                 'We will be in touch\n to take payment :-)',
-                                style: GoogleFonts.raleway(fontSize: 18),
+                                style: TextStyle(fontFamily: 'Raleway', fontSize: 18),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -110,11 +100,8 @@ class CheckOut extends StatelessWidget {
                             Container(
                               height: MediaQuery.of(context).size.height * 0.6,
                               width: MediaQuery.of(context).size.width * 0.6,
-                              child: FlareActor("assets/confetti_boom.flr",
-                                  alignment: Alignment.center,
-                                  fit: BoxFit.contain,
-                                  snapToEnd: true,
-                                  animation: "boom"),
+                              child: FlareActor("assets/animations/confetti_boom.flr",
+                                  alignment: Alignment.center, fit: BoxFit.contain, snapToEnd: true, animation: "boom"),
                             ),
                             FlatButton(
                               disabledColor: Colors.red,
@@ -122,18 +109,12 @@ class CheckOut extends StatelessWidget {
                               onPressed: () {
                                 model.pizzasList.clear();
                                 model.loadingFormSubmit = false;
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HomeView()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => HomeView()));
                               },
                               splashColor: Colors.red[200],
-                              child: Text('New order',
-                                  style:
-                                      GoogleFonts.raleway(color: Colors.white)),
+                              child: Text('New order', style: TextStyle(fontFamily: 'Raleway', color: Colors.white)),
                               textColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                             ),
                           ],
                         ),
@@ -155,18 +136,12 @@ class CheckOut extends StatelessWidget {
               formFieldUI(
                 attribute: "name",
                 labelText: "Name",
-                validators: [
-                  FormBuilderValidators.required(),
-                  FormBuilderValidators.maxLength(30)
-                ],
+                validators: [FormBuilderValidators.required(), FormBuilderValidators.maxLength(30)],
               ),
               formFieldUI(
                 attribute: "email",
                 labelText: "Email",
-                validators: [
-                  FormBuilderValidators.required(),
-                  FormBuilderValidators.email()
-                ],
+                validators: [FormBuilderValidators.required(), FormBuilderValidators.email()],
               ),
               formFieldUI(
                 attribute: "phone",
@@ -178,20 +153,14 @@ class CheckOut extends StatelessWidget {
               formFieldUI(
                 attribute: "adress",
                 labelText: "Adress",
-                validators: [
-                  FormBuilderValidators.required(),
-                  FormBuilderValidators.maxLength(30)
-                ],
+                validators: [FormBuilderValidators.required(), FormBuilderValidators.maxLength(30)],
               ),
             ],
           ),
         ));
   }
 
-  Widget formFieldUI(
-      {String attribute,
-      String labelText,
-      List<String Function(dynamic)> validators}) {
+  Widget formFieldUI({String attribute, String labelText, List<String Function(dynamic)> validators}) {
     return Column(
       children: [
         FormBuilderTextField(
@@ -201,12 +170,10 @@ class CheckOut extends StatelessWidget {
           attribute: attribute,
           decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                borderSide: BorderSide(color: Colors.red)),
+                borderRadius: BorderRadius.all(Radius.circular(5.0)), borderSide: BorderSide(color: Colors.red)),
             filled: false,
-            contentPadding:
-                EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
-            labelStyle: GoogleFonts.raleway(color: Colors.white),
+            contentPadding: EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
+            labelStyle: TextStyle(fontFamily: 'Raleway', color: Colors.white),
             labelText: labelText,
           ),
           onChanged: (val) => print(val),

@@ -2,27 +2,23 @@ import 'package:bagel_pizza/controller/home_controller.dart';
 import 'package:bagel_pizza/scoped_model/base_view.dart';
 import 'package:bagel_pizza/views/checkout.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class OrderedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<HomeController>(
       builder: (context, childe, model) => Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/bg.jpg'), fit: BoxFit.cover)),
+        decoration:
+            BoxDecoration(image: DecorationImage(image: AssetImage('assets/pictures/bg.jpg'), fit: BoxFit.cover)),
         child: WillPopScope(
           onWillPop: () {
-            return Navigator.pushNamed(context, 'home',
-                arguments: {'pizza': model.pizzasList.last});
+            return Navigator.pushNamed(context, 'home', arguments: {'pizza': model.pizzasList.last});
           },
           child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               automaticallyImplyLeading: false,
-              title:
-                  Container(height: 28, child: Image.asset('assets/logo.png')),
+              title: Container(height: 28, child: Image.asset('assets/pictures/logo.png')),
               centerTitle: true,
             ),
             body: Column(
@@ -61,8 +57,7 @@ class OrderedPage extends StatelessWidget {
 
   Widget _pizzaUI(HomeController model, int index, BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.popAndPushNamed(context, 'home',
-          arguments: {'pizza': model.pizzasList[index]}),
+      onTap: () => Navigator.popAndPushNamed(context, 'home', arguments: {'pizza': model.pizzasList[index]}),
       child: Container(
         height: 120,
         child: ListView(
@@ -72,7 +67,7 @@ class OrderedPage extends StatelessWidget {
           children: [
             Container(
               child: Image.asset(
-                'assets/half.png',
+                'assets/pictures/half.png',
                 scale: 7.0,
               ),
             ),
@@ -91,13 +86,10 @@ class OrderedPage extends StatelessWidget {
                       icon: Text(
                         model.pizzasList[index].size +
                             ' size | \$' +
-                            model
-                                .calculatePizzaPrice(model.pizzasList[index])
-                                .toString(),
-                        style: GoogleFonts.raleway(fontSize: 19),
+                            model.calculatePizzaPrice(model.pizzasList[index]).toString(),
+                        style: TextStyle(fontFamily: 'Raleway', fontSize: 19),
                       ),
-                      onPressed: () =>
-                          model.removePizza(model.pizzasList[index])),
+                      onPressed: () => model.removePizza(model.pizzasList[index])),
                 ),
                 //   ],
                 // ),
@@ -111,8 +103,7 @@ class OrderedPage extends StatelessWidget {
                       itemBuilder: (BuildContext context, int idx) {
                         return Center(
                           child: CircleAvatar(
-                            backgroundImage: NetworkImage(model
-                                .pizzasList[index].toppings[idx].smallImage),
+                            backgroundImage: NetworkImage(model.pizzasList[index].toppings[idx].smallImage),
                             radius: 20,
                           ),
                         );
@@ -138,7 +129,7 @@ class OrderedPage extends StatelessWidget {
         Navigator.pushNamed(context, 'home');
       },
       child: CircleAvatar(
-        backgroundImage: AssetImage('assets/pizza.png'),
+        backgroundImage: AssetImage('assets/pictures/pizza.png'),
         backgroundColor: Colors.red,
         radius: 60.5,
         child: CircleAvatar(
@@ -159,14 +150,13 @@ class OrderedPage extends StatelessWidget {
       disabledColor: Colors.red,
       color: Colors.red,
       onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => CheckOut()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut()));
       },
       splashColor: Colors.red[200],
 
       // minWidth: MediaQuery.of(context).size.width * 0.55,
       // height: 45,
-      child: Text('All done?', style: GoogleFonts.raleway(color: Colors.white)),
+      child: Text('All done?', style: TextStyle(fontFamily: 'Raleway', color: Colors.white)),
       textColor: Colors.white,
       shape: RoundedRectangleBorder(
           //side: BorderSide(color: Colors.blue, width: 1, style: BorderStyle.solid),

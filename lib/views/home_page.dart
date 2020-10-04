@@ -4,7 +4,6 @@ import 'package:bagel_pizza/scoped_model/base_view.dart';
 import 'package:bagel_pizza/views/ordered_page.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class HomeView extends StatelessWidget {
   final Map args;
@@ -14,13 +13,12 @@ class HomeView extends StatelessWidget {
     return BaseView<HomeController>(
       onModelReady: (model) => model.init(pizzaMap: args),
       builder: (context, childe, model) => Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/bg.jpg'), fit: BoxFit.cover)),
+        decoration:
+            BoxDecoration(image: DecorationImage(image: AssetImage('assets/pictures/bg.jpg'), fit: BoxFit.cover)),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: Container(height: 28, child: Image.asset('assets/logo.png')),
+            title: Container(height: 28, child: Image.asset('assets/pictures/logo.png')),
             centerTitle: true,
           ),
           body: Column(
@@ -28,8 +26,7 @@ class HomeView extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 4.0, right: 10, left: 10),
-                child: Container(
-                    color: Colors.white.withOpacity(0.5), height: 0.3),
+                child: Container(color: Colors.white.withOpacity(0.5), height: 0.3),
               ),
               model.sizesList.isEmpty
                   ? Container(
@@ -45,8 +42,7 @@ class HomeView extends StatelessWidget {
                   : _chipsUI(model),
               Padding(
                 padding: const EdgeInsets.only(right: 10, left: 10, bottom: 4),
-                child: Container(
-                    color: Colors.white.withOpacity(0.5), height: 0.3),
+                child: Container(color: Colors.white.withOpacity(0.5), height: 0.3),
               ),
               DragTarget<Topping>(
                 builder: (context, accepted, rejected) {
@@ -58,7 +54,7 @@ class HomeView extends StatelessWidget {
                               backgroundColor: Colors.red,
                               child: CircleAvatar(
                                 radius: 140,
-                                backgroundImage: AssetImage('assets/pizza.png'),
+                                backgroundImage: AssetImage('assets/pictures/pizza.png'),
                               ),
                             ),
                           )
@@ -68,7 +64,7 @@ class HomeView extends StatelessWidget {
                               backgroundColor: Colors.transparent,
                               child: CircleAvatar(
                                 radius: 140,
-                                backgroundImage: AssetImage('assets/pizza.png'),
+                                backgroundImage: AssetImage('assets/pictures/pizza.png'),
                               ),
                             ),
                           ),
@@ -99,15 +95,14 @@ class HomeView extends StatelessWidget {
                           SizedBox(height: 6),
                           Text(
                             'Loading toppings...',
-                            style: GoogleFonts.raleway(fontSize: 10),
+                            style: TextStyle(fontFamily: 'Raleway', fontSize: 10),
                           ),
                           SizedBox(height: 13),
                           SizedBox(
                               height: 24,
                               width: 24,
                               child: CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.red),
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                                 strokeWidth: 3,
                               )),
                         ],
@@ -142,13 +137,12 @@ class HomeView extends StatelessWidget {
         SizedBox(height: 6),
         Text(
           '${topping.name}',
-          style: GoogleFonts.raleway(),
+          style: TextStyle(fontFamily: 'Raleway'),
         ),
         SizedBox(height: 3),
         Text(
           '\$' + '${topping.price.toString()}',
-          style: GoogleFonts.raleway(
-              color: Colors.red, fontWeight: FontWeight.bold),
+          style: TextStyle(fontFamily: 'Raleway', color: Colors.red, fontWeight: FontWeight.bold),
         )
       ],
     );
@@ -175,7 +169,7 @@ class HomeView extends StatelessWidget {
         SizedBox(height: 6),
         Text(
           topping.name,
-          style: GoogleFonts.raleway(),
+          style: TextStyle(fontFamily: 'Raleway'),
         )
       ],
     );
@@ -204,7 +198,7 @@ class HomeView extends StatelessWidget {
         SizedBox(height: 6),
         Text(
           topping.name,
-          style: GoogleFonts.raleway(),
+          style: TextStyle(fontFamily: 'Raleway'),
         )
       ],
     );
@@ -223,7 +217,7 @@ class HomeView extends StatelessWidget {
         spacing: 30.0,
         selectedColor: Colors.red,
         showCheckmark: true,
-        labelStyle: GoogleFonts.raleway(fontSize: 14),
+        labelStyle: TextStyle(fontFamily: 'Raleway', fontSize: 14),
         selectedBrightness: Brightness.dark,
       ),
       onChanged: (val) => model.changeTag(val),
@@ -234,9 +228,7 @@ class HomeView extends StatelessWidget {
   Widget _draggableUI(HomeController model, int index) {
     return Draggable<Topping>(
         data: model.toppingsList[index],
-        child: model.pizzaToppingsImages
-                    .contains(model.toppingsList[index].pizzaImage) &&
-                model.finishDrag
+        child: model.pizzaToppingsImages.contains(model.toppingsList[index].pizzaImage) && model.finishDrag
             ? _cancelToppingItemUI(model.toppingsList[index], model)
             : _toppingItemUI(model.toppingsList[index]),
         feedback: _toppingItemUIDragged(model.toppingsList[index]),
@@ -254,11 +246,10 @@ class HomeView extends StatelessWidget {
       color: Colors.red,
       onPressed: () {
         model.savePizza();
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => OrderedPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => OrderedPage()));
       },
       splashColor: Colors.red[200],
-      child: Text('Next', style: GoogleFonts.raleway(color: Colors.white)),
+      child: Text('Next', style: TextStyle(fontFamily: 'Raleway', color: Colors.white)),
       textColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
     );

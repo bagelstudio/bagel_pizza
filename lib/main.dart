@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       },
       //home: HomeView(),
       home: SplashScreen(
-        'assets/pizza.flr',
+        'assets/animations/pizza.flr',
         HomeView(),
         startAnimation: 'pizza',
       ),
