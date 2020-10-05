@@ -63,15 +63,15 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/pizza.flr
-    - assets/logo.png
-    - assets/pizza_icon.jpg
-    - assets/pizza_icon-oval.png
-    - assets/
+    - assets/animations/pizza.flr
+    - assets/pictures/
   #   - images/a_dot_ham.jpeg
   fonts:
     - family: Raleway
       fonts:
+        - asset: assets/fonts/Raleway/Raleway-Regular.ttf
+        - asset: assets/fonts/Raleway/Raleway-Italic.ttf
+          style: italic
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
