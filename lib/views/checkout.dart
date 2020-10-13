@@ -20,8 +20,8 @@ class CheckOut extends StatelessWidget {
           ),
           body: Center(
             child: !model.formSent
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                ? ListView(
+                    //mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       SizedBox(height: 20),
                       Center(
@@ -39,7 +39,7 @@ class CheckOut extends StatelessWidget {
                       pizzaFormUI(model, context),
                       SizedBox(height: 30),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 50),
+                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.32),
                         child: FlatButton(
                           disabledColor: Colors.red,
                           color: Colors.red,
@@ -78,45 +78,64 @@ class CheckOut extends StatelessWidget {
                         children: [Text('Err!')],
                       )
                     : Center(
-                        child: Column(
-                          children: [
-                            SizedBox(height: 50),
-                            Center(
-                              child: Text(
-                                'Thank you for order!',
-                                style: TextStyle(fontFamily: 'Raleway', fontSize: 28),
-                                textAlign: TextAlign.center,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 30),
+                          child: Column(
+                            children: [
+                              Container(
+                                height: MediaQuery.of(context).size.height * 0.7,
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                child: Stack(
+                                  children: [
+                                    FlareActor("assets/animations/confetti_boom.flr",
+                                        alignment: Alignment.center,
+                                        fit: BoxFit.contain,
+                                        snapToEnd: true,
+                                        animation: "boom"),
+                                    Column(
+                                      children: [
+                                        SizedBox(height: 65),
+                                        Center(
+                                          child: Text(
+                                            'Thank you for order!',
+                                            style: TextStyle(fontFamily: 'Raleway', fontSize: 28),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        SizedBox(height: 15),
+                                        Center(
+                                          child: Text(
+                                            'We will be in touch\n to take payment :-)',
+                                            style: TextStyle(fontFamily: 'Raleway', fontSize: 18),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 15),
-                            Center(
-                              child: Text(
-                                'We will be in touch\n to take payment :-)',
-                                style: TextStyle(fontFamily: 'Raleway', fontSize: 18),
-                                textAlign: TextAlign.center,
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: SafeArea(
+                                  child: FlatButton(
+                                    disabledColor: Colors.red,
+                                    color: Colors.red,
+                                    onPressed: () {
+                                      model.pizzasList.clear();
+                                      model.loadingFormSubmit = false;
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeView()));
+                                    },
+                                    splashColor: Colors.red[200],
+                                    child:
+                                        Text('New order', style: TextStyle(fontFamily: 'Raleway', color: Colors.white)),
+                                    textColor: Colors.white,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                                  ),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 35),
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.6,
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              child: FlareActor("assets/animations/confetti_boom.flr",
-                                  alignment: Alignment.center, fit: BoxFit.contain, snapToEnd: true, animation: "boom"),
-                            ),
-                            FlatButton(
-                              disabledColor: Colors.red,
-                              color: Colors.red,
-                              onPressed: () {
-                                model.pizzasList.clear();
-                                model.loadingFormSubmit = false;
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => HomeView()));
-                              },
-                              splashColor: Colors.red[200],
-                              child: Text('New order', style: TextStyle(fontFamily: 'Raleway', color: Colors.white)),
-                              textColor: Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
           ),

@@ -3,6 +3,10 @@ import 'package:bagel_pizza/scoped_model/base_view.dart';
 import 'package:bagel_pizza/views/checkout.dart';
 import 'package:flutter/material.dart';
 
+import '../controller/home_controller.dart';
+import '../controller/home_controller.dart';
+import '../controller/home_controller.dart';
+
 class OrderedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -25,21 +29,7 @@ class OrderedPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(height: 15),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  child: ListView.separated(
-                      shrinkWrap: true,
-                      //physics: NeverScrollableScrollPhysics(),
-                      separatorBuilder: (context, index) => Divider(
-                            thickness: 1.9,
-                            height: 25,
-                          ),
-                      //scrollDirection: Axis.vertical,
-                      itemCount: model.pizzasList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return _pizzaUI(model, index, context);
-                      }),
-                ),
+                _pizzasListUI(model, context),
                 SizedBox(
                   height: 20,
                 ),
@@ -61,7 +51,6 @@ class OrderedPage extends StatelessWidget {
       child: Container(
         height: 120,
         child: ListView(
-          //sics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           children: [
@@ -91,29 +80,8 @@ class OrderedPage extends StatelessWidget {
                       ),
                       onPressed: () => model.removePizza(model.pizzasList[index])),
                 ),
-                //   ],
-                // ),
                 SizedBox(height: 3),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 50,
-                  child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext context, int idx) {
-                        return Center(
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(model.pizzasList[index].toppings[idx].smallImage),
-                            radius: 20,
-                          ),
-                        );
-                      },
-                      separatorBuilder: (context, idx) => SizedBox(
-                            width: 5,
-                          ),
-                      itemCount: model.pizzasList[index].toppings.length),
-                ),
-                SizedBox(height: 0)
+                _toppingsScrolleListUI(model, context, index)
               ],
             ),
           ],
@@ -161,6 +129,44 @@ class OrderedPage extends StatelessWidget {
       shape: RoundedRectangleBorder(
           //side: BorderSide(color: Colors.blue, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(50)),
+    );
+  }
+
+  Widget _pizzasListUI(HomeController model, BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.5,
+      child: ListView.separated(
+          shrinkWrap: true,
+          separatorBuilder: (context, index) => Divider(
+                thickness: 1.9,
+                height: 25,
+              ),
+          itemCount: model.pizzasList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return _pizzaUI(model, index, context);
+          }),
+    );
+  }
+
+  Widget _toppingsScrolleListUI(HomeController model, BuildContext context, int index) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 50,
+      child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          itemBuilder: (BuildContext context, int idx) {
+            return Center(
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(model.pizzasList[index].toppings[idx].smallImage),
+                radius: 20,
+              ),
+            );
+          },
+          separatorBuilder: (context, idx) => SizedBox(
+                width: 5,
+              ),
+          itemCount: model.pizzasList[index].toppings.length),
     );
   }
 }

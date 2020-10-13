@@ -4,6 +4,7 @@ import 'package:bagel_pizza/scoped_model/base_view.dart';
 import 'package:bagel_pizza/views/ordered_page.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:flutter/material.dart';
+import '../controller/home_controller.dart';
 
 class HomeView extends StatelessWidget {
   final Map args;
@@ -18,16 +19,14 @@ class HomeView extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            leading: Container(),
             title: Container(height: 28, child: Image.asset('assets/pictures/logo.png')),
             centerTitle: true,
           ),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0, right: 10, left: 10),
-                child: Container(color: Colors.white.withOpacity(0.5), height: 0.3),
-              ),
+              _customDivider(),
               model.sizesList.isEmpty
                   ? Container(
                       height: 14,
@@ -40,34 +39,11 @@ class HomeView extends StatelessWidget {
                       ),
                     )
                   : _chipsUI(model),
-              Padding(
-                padding: const EdgeInsets.only(right: 10, left: 10, bottom: 4),
-                child: Container(color: Colors.white.withOpacity(0.5), height: 0.3),
-              ),
+              _customDivider(),
               DragTarget<Topping>(
                 builder: (context, accepted, rejected) {
                   return Stack(alignment: Alignment.topCenter, children: [
-                    !model.finishDrag && accepted.isNotEmpty
-                        ? Center(
-                            child: CircleAvatar(
-                              radius: 145,
-                              backgroundColor: Colors.red,
-                              child: CircleAvatar(
-                                radius: 140,
-                                backgroundImage: AssetImage('assets/pictures/pizza.png'),
-                              ),
-                            ),
-                          )
-                        : Center(
-                            child: CircleAvatar(
-                              radius: 145,
-                              backgroundColor: Colors.transparent,
-                              child: CircleAvatar(
-                                radius: 140,
-                                backgroundImage: AssetImage('assets/pictures/pizza.png'),
-                              ),
-                            ),
-                          ),
+                    _bigPizzaUI(model, accepted),
                     ...model.pizzaToppingsImages
                         .map(
                           (link) => Positioned(
@@ -83,42 +59,12 @@ class HomeView extends StatelessWidget {
                         .toList()
                   ]);
                 },
-                onAccept: (Topping top) => model.addToppingToPizza(top),
+                onAccept: (Topping topping) => model.addToppingToPizza(topping),
               ),
               SizedBox(height: 13),
-              SizedBox(
-                height: 110,
-                child: model.toppingsList.isEmpty
-                    ? Center(
-                        child: Column(
-                        children: [
-                          SizedBox(height: 6),
-                          Text(
-                            'Loading toppings...',
-                            style: TextStyle(fontFamily: 'Raleway', fontSize: 10),
-                          ),
-                          SizedBox(height: 13),
-                          SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                                strokeWidth: 3,
-                              )),
-                        ],
-                      ))
-                    : ListView.separated(
-                        separatorBuilder: (context, index) => SizedBox(
-                              width: 15,
-                            ),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: model.toppingsList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return _draggableUI(model, index);
-                        }),
-              ),
+              _scrolledToppingsUI(model),
               SizedBox(height: 5),
-              nextButtonUI(model, context),
+              _nextButtonUI(model, context),
               SizedBox(height: 13)
             ],
           ),
@@ -220,7 +166,7 @@ class HomeView extends StatelessWidget {
         labelStyle: TextStyle(fontFamily: 'Raleway', fontSize: 14),
         selectedBrightness: Brightness.dark,
       ),
-      onChanged: (val) => model.changeTag(val),
+      onChanged: (val) => model.changePizzaSize(val),
       isWrapped: false,
     );
   }
@@ -240,7 +186,7 @@ class HomeView extends StatelessWidget {
         childWhenDragging: _selectedToppingItemUI(model.toppingsList[index]));
   }
 
-  nextButtonUI(HomeController model, BuildContext context) {
+  Widget _nextButtonUI(HomeController model, BuildContext context) {
     return FlatButton(
       disabledColor: Colors.red,
       color: Colors.red,
@@ -252,6 +198,60 @@ class HomeView extends StatelessWidget {
       child: Text('Next', style: TextStyle(fontFamily: 'Raleway', color: Colors.white)),
       textColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+    );
+  }
+
+  Widget _customDivider() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4.0, right: 10, left: 10),
+      child: Container(color: Colors.white.withOpacity(0.5), height: 0.3),
+    );
+  }
+
+  Widget _bigPizzaUI(HomeController model, List<Topping> accepted) {
+    return Center(
+      child: CircleAvatar(
+        radius: 145,
+        backgroundColor: !model.finishDrag && accepted.isNotEmpty ? Colors.red : Colors.transparent,
+        child: CircleAvatar(
+          radius: 140,
+          backgroundImage: AssetImage('assets/pictures/pizza.png'),
+        ),
+      ),
+    );
+  }
+
+  Widget _scrolledToppingsUI(HomeController model) {
+    return SizedBox(
+      height: 110,
+      child: model.toppingsList.isEmpty
+          ? Center(
+              child: Column(
+              children: [
+                SizedBox(height: 6),
+                Text(
+                  'Loading toppings...',
+                  style: TextStyle(fontFamily: 'Raleway', fontSize: 10),
+                ),
+                SizedBox(height: 13),
+                SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                      strokeWidth: 3,
+                    )),
+              ],
+            ))
+          : ListView.separated(
+              separatorBuilder: (context, index) => SizedBox(
+                    width: 15,
+                  ),
+              scrollDirection: Axis.horizontal,
+              itemCount: model.toppingsList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return _draggableUI(model, index);
+              }),
     );
   }
 }

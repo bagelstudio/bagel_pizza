@@ -1,6 +1,6 @@
 
 # Bagel Pizza
-This app comes to demonstrate the use of the ```bagel_db``` flutter [package](https://pub.dev/packages/bagel_db).  The app simulates the process of ordering a pizza, without processing payments.
+This app comes to demonstrate the use of the ```bagel_db``` flutter [package](https://pub.dev/packages/bagel_db). The app simulates the process of ordering a pizza, without processing payments.
 
 **BagelDB** is a headless-CMS with the power of a DB.
 
